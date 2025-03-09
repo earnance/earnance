@@ -1,51 +1,55 @@
 import mongoose from "mongoose";
 
-const taskSeekerSchema = new mongoose.Schema(
+const UserSchema = new mongoose.Schema(
   {
-    Name: {
+    name: {
       type: String,
       require: true,
     },
-    ProfilePic: {
+    profilePic: {
       type: String,
     },
-    Username: {
+    username: {
       type: String,
       unique: true,
     },
-    Date: {
+    date: {
       type: Date,
     },
-    Gender: {
+    gender: {
       type: String,
       enum: ["male", "female", "other"],
     },
-    Email: {
+    email: {
       type: String,
       require: true,
+      unique : true,
     },
     isEmailVerfiy: {
       type: Boolean,
+      default: false,
     },
-    Phone: {
-      type: Number,
+    phone: {
+      type: String,
       require: true,
+      unique : true,
     },
     isPhoneVerify: {
       type: Boolean,
+      default : false,
     },
-    Password: {
+    password: {
       type: String,
       require: true,
     },
-    Address: {
+    address: {
       type: String,
     },
-    CollegeId: {
+    collegeId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "College",
     },
-    Skills: [
+    skills: [
       {
         type: String,
         enum: [
@@ -64,11 +68,16 @@ const taskSeekerSchema = new mongoose.Schema(
     isCollegeIdVerify: {
       type: Boolean,
     },
-    EmailVerificationCode: {
+    emailVerificationCode: {
       type: String,
     },
-    PhoneVerificationCode: {
+    phoneVerificationCode: {
       type: String,
+    },
+    role: {
+      type: String,
+      enum: ["taskSeeker", "taskProvider"],
+      require: true,
     },
   },
   {
@@ -76,6 +85,6 @@ const taskSeekerSchema = new mongoose.Schema(
   }
 );
 
-const TaskSeeker = mongoose.model("TaskSeeker", taskSeekerSchema);
+const User = mongoose.model("User", UserSchema);
 
-export default TaskSeeker;
+export default User;
