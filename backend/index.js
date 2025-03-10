@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import { ConnectDB } from "./src/lib/db.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import authRoutes from "./src/routes/authRoutes.js";
 
 /* `dotenv.config();` is a function call that loads the environment variables from a `.env` file into
 `process.env`. This allows you to store configuration settings in a separate file (`.env`) and
@@ -28,12 +29,7 @@ app.use(
   })
 );
 
-/* The code `app.get("/", (res, req) => {
-  res.send("Hello World!");
-});` is setting up a route in the Express application. */
-app.get("/", (res, req) => {
-  res.send("Hello World!");
-});
+app.use("/api/auth", authRoutes)
 
 /* The `app.listen(PORT, () => { ... });` code block is starting the Express application server to
 listen for incoming requests on a specified port. Here's what each part of this code block does: */
