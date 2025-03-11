@@ -1,3 +1,4 @@
+import { sendVerificationEmail, sendWelcomeEmail } from "../lib/email.js";
 import { generateToken } from "../lib/utils.js";
 import User from "../models/userModel.js";
 import bcrypt from "bcrypt";
@@ -27,9 +28,9 @@ export const signup = async (req, res) => {
 
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
-    //   const verificationCode = Math.floor(
-    //     100000 + Math.random() * 900000
-    //   ).toString();
+    const emailverificationCode = Math.floor(
+      100000 + Math.random() * 900000
+    ).toString();
 
     const newUser = new User({
       name,
@@ -37,9 +38,10 @@ export const signup = async (req, res) => {
       role,
       phone,
       password: hashedPassword,
+      emailVerificationCode: emailverificationCode,
     });
 
-    //   sendVerificationEmail(email, verificationCode);
+    await sendVerificationEmail(email, emailverificationCode);
 
     if (newUser) {
       generateToken(newUser._id, res);
@@ -51,7 +53,7 @@ export const signup = async (req, res) => {
         email: newUser.email,
         phone: newUser.phone,
         role: newUser.role,
-        isPhoneVerify: newUser.isPhoneVerify,
+        emailVerificationCode: emailverificationCode,
         isEmailVerfiy: newUser.isEmailVerfiy,
       });
     } else {
@@ -64,10 +66,10 @@ export const signup = async (req, res) => {
 };
 
 export const login = async (req, res) => {
-  const { identifier , password } = req.body;
+  const { identifier, password } = req.body;
   try {
     const user = await User.findOne({
-      $or: [{ email:identifier  }, { phone:identifier  }],
+      $or: [{ email: identifier }, { phone: identifier }],
     });
 
     console.log(user);
@@ -92,11 +94,33 @@ export const login = async (req, res) => {
 };
 
 export const logout = (req, res) => {
-    try {
-      res.cookie("jwt", "", { maxAge: 0 });
-      res.status(200).json({ message: "Logged Out" });
-    } catch (error) {
-      console.log("Error in Logout Controller", error.message);
-      res.status(500).json({ message: "Server Error" });
+  try {
+    res.cookie("jwt", "", { maxAge: 0 });
+    res.status(200).json({ message: "Logged Out" });
+  } catch (error) {
+    console.log("Error in Logout Controller", error.message);
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+
+export const emailVerificationCheck = async (req, res) => {
+  try {
+    const { code } = req.body;
+    const user = await User.findOne({
+      emailVerificationCode: code,
+    });
+    if (!user) {
+      return res.status(400).json({ message: "Invalid Code or Expired Code." });
     }
-  };
+    user.isEmailVerfiy = true;
+    user.emailVerificationCode = undefined;
+    await user.save();
+    sendWelcomeEmail(user.email);
+    return res.status(200).json({ message: "User isVerified! " });
+  } catch (error) {
+    console.log("Error in checking email verifcation: ", error);
+    res
+      .status(500)
+      .json({ message: "Error checking verification", error: error.message });
+  }
+};
