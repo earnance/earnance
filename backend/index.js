@@ -6,6 +6,8 @@ import { ConnectDB } from "./src/lib/db.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import authRoutes from "./src/routes/authRoutes.js";
+import { swaggerUi } from "./src/lib/swagger.js";
+import docs from "./src/documentations/index.js";
 
 /* `dotenv.config();` is a function call that loads the environment variables from a `.env` file into
 `process.env`. This allows you to store configuration settings in a separate file (`.env`) and
@@ -21,6 +23,7 @@ const PORT = process.env.PORT;
 /* These lines of code are setting up middleware functions in an Express application: */
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ limit: "10mb", extended: true }));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(docs)); // Swagger UI
 app.use(cookieParser());
 app.use(
   cors({
