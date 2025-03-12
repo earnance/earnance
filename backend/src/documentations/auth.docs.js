@@ -145,6 +145,73 @@ const authenticationPaths = {
       },
     },
   },
+  "/api/auth/check": {
+    get: {
+      summary: "Check Authentication",
+      tags: ["Authentication"],
+      description:
+        "Checks if the user is authenticated by verifying the provided JWT token in cookies.",
+      security: [
+        {
+          cookieAuth: [],
+        },
+      ],
+      responses: {
+        200: {
+          description: "User is authenticated",
+          content: {
+            "application/json": {
+              example: {
+                _id: "60a7f8b7c29e4a3d6c8b4567",
+                name: "John Doe",
+                email: "johndoe@example.com",
+                role: "user",
+              },
+            },
+          },
+        },
+        401: {
+          description: "Unauthorized - No Token Provided or Invalid Token",
+          content: {
+            "application/json": {
+              examples: {
+                "No Token": {
+                  value: {
+                    message: "No Token Provided",
+                  },
+                },
+                "Invalid Token": {
+                  value: {
+                    message: "Invalid Token",
+                  },
+                },
+              },
+            },
+          },
+        },
+        404: {
+          description: "User Not Found",
+          content: {
+            "application/json": {
+              example: {
+                message: "User not found",
+              },
+            },
+          },
+        },
+        500: {
+          description: "Internal Server Error",
+          content: {
+            "application/json": {
+              example: {
+                message: "Server Error",
+              },
+            },
+          },
+        },
+      },
+    },
+  },
 };
 
 export default authenticationPaths;
