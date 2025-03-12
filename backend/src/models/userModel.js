@@ -6,6 +6,29 @@ const UserSchema = new mongoose.Schema(
       type: String,
       require: true,
     },
+    email: {
+      type: String,
+      require: true,
+      unique : true,
+    },
+    role: {
+      type: String,
+      enum: ["taskSeeker", "taskProvider"],
+      require: true,
+    },
+    phone: {
+      type: String,
+      require: true,
+      unique : true,
+    },
+    password: {
+      type: String,
+      require: true,
+    },
+    emailVerificationCode: {
+      type: String,
+    },
+    
     profilePic: {
       type: String,
     },
@@ -20,28 +43,17 @@ const UserSchema = new mongoose.Schema(
       type: String,
       enum: ["male", "female", "other"],
     },
-    email: {
-      type: String,
-      require: true,
-      unique : true,
-    },
+   
     isEmailVerfiy: {
       type: Boolean,
       default: false,
     },
-    phone: {
-      type: String,
-      require: true,
-      unique : true,
-    },
+    
     isPhoneVerify: {
       type: Boolean,
       default : false,
     },
-    password: {
-      type: String,
-      require: true,
-    },
+    
     address: {
       type: String,
     },
@@ -68,17 +80,11 @@ const UserSchema = new mongoose.Schema(
     isCollegeIdVerify: {
       type: Boolean,
     },
-    emailVerificationCode: {
-      type: String,
-    },
+    
     phoneVerificationCode: {
       type: String,
     },
-    role: {
-      type: String,
-      enum: ["taskSeeker", "taskProvider"],
-      require: true,
-    },
+    
   },
   {
     timestamps: true,

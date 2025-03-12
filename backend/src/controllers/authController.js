@@ -124,3 +124,13 @@ export const emailVerificationCheck = async (req, res) => {
       .json({ message: "Error checking verification", error: error.message });
   }
 };
+
+export const getAllUser = async(req,res)=>{
+  try {
+    const user = await User.find()
+    res.json(user);
+} catch (error) {
+    console.log( "Error while getting Events ",error);
+    res.status(500).send({message:"Internal Server Error"});
+}
+}
