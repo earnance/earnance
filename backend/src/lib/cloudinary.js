@@ -32,4 +32,4 @@ console.log(`Cloud Secret: ${process.env.CLOUDINARY_API_SECRET}`);
         
     }
 };
-export { uploadOnCloudinary };
+export default uploadOnCloudinary;
