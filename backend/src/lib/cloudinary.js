@@ -8,7 +8,7 @@ cloudinary.config({
 });
 
 
-const uploadOnCloudinary = async (buffer) => {
+export const uploadOnCloudinary = async (buffer) => {
     try {
         console.log(`Cloud Name: ${process.env.CLOUDINARY_CLOUD_NAME}`);
 console.log(`Cloud API: ${process.env.CLOUDINARY_API_KEY}`);
@@ -32,4 +32,3 @@ console.log(`Cloud Secret: ${process.env.CLOUDINARY_API_SECRET}`);
         
     }
 };
-export default uploadOnCloudinary;
